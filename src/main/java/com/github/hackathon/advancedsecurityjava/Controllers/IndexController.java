@@ -3,6 +3,7 @@ package com.github.hackathon.advancedsecurityjava.Controllers;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class IndexController {
     try {
       // Init connection to DB
       connection = DriverManager.getConnection(Application.connectionString);
-Map parameters = new Map();
+List<String> parameters = new ArrayList<>();
       statement = connection.createStatement();
       String query = null;
 
