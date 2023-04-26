@@ -58,7 +58,7 @@ public class IndexController {
 
       statement = connection.prepareStatement(query);
 	  int index = 1;
-	  for(String paremeter : paremeters){
+	  for(String parameter : parameters){
 		statement.setString(index,parameter);
 		index += 1;		
 	  }
