@@ -45,7 +45,8 @@ public class IndexController {
         query = "SELECT * FROM Books WHERE author LIKE '%" + bookauthor + "%'";
       } else if (bookread != null) {
         // Filter by if the book has been read or not
-        Integer read = bookread ? 1 : 0;
+        Integer read =0;
+        read= bookread ? 1 : 0;
         query = "SELECT * FROM Books WHERE read = '" + read.toString() + "'";
       } else {
         // All books
