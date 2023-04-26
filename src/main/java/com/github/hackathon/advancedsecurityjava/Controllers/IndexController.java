@@ -28,40 +28,39 @@ public class IndexController {
       @RequestParam(name = "read", required = false) Boolean bookread) {
     List<Book> books = new ArrayList<Book>();
 
-   // Statement statement = null;
+    Statement statement = null;
 
     try {
       // Init connection to DB
       connection = DriverManager.getConnection(Application.connectionString);
 
-      //statement = connection.createStatement();
+      statement = connection.createStatement();
       String query = null;
 
       if (bookname != null) {
         // Filter by book name
-        query = "SELECT * FROM Books WHERE name LIKE '%" + bookname + "%'";
+        query = "SELECT * FROM Books WHERE name LIKE ?";
       } else if (bookauthor != null) {
         // Filter by book author
-        query = "SELECT * FROM Books WHERE author LIKE '%" + bookauthor + "%'";
+        query = "SELECT * FROM Books WHERE author LIKE ?";
       } else if (bookread != null) {
         // Filter by if the book has been read or not
-        Integer read =0;
-        read= bookread ? 1 : 0;
-        query = "SELECT * FROM Books WHERE read = '" + read.toString() + "'";
+        Integer read = bookread ? 1 : 0;
+        
+        query = "SELECT * FROM Books WHERE read = ?";
+		parameters.add(read.toString());
       } else {
         // All books
         query = "SELECT * FROM Books";
       }
-      
-      PreparedStatement statement = connection.prepareStatement(query);
-      ResultSet results = statement.executeQuery();
-      //ResultSet results = statement.executeQuery(query);
 
-      while (results.next()) {
-        Book book = new Book(results.getString("name"), results.getString("author"), (results.getInt("read") == 1));
-
-        books.add(book);
-      }
+      statement = connection.prepareStatement(query);
+	  int index = 1;
+	  for(String paremeter : paremeter){
+		statement.setString(index,parameter);
+		index += 1;		
+	  }
+		ResultSet results = statement.executeQuery();
 
     } catch (SQLException error) {
       error.printStackTrace();
