@@ -33,7 +33,7 @@ public class IndexController {
     try {
       // Init connection to DB
       connection = DriverManager.getConnection(Application.connectionString);
-
+Map parameters = new Map();
       statement = connection.createStatement();
       String query = null;
 
