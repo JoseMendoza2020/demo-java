@@ -34,7 +34,7 @@ public class IndexController {
       // Init connection to DB
       connection = DriverManager.getConnection(Application.connectionString);
 
-      statement = connection.createStatement();
+      //statement = connection.createStatement();
       String query = null;
 
       if (bookname != null) {
@@ -51,8 +51,10 @@ public class IndexController {
         // All books
         query = "SELECT * FROM Books";
       }
-
-      ResultSet results = statement.executeQuery(query);
+      
+      PreparedStatement statement = connection.prepareStatement(query);
+      ResultSet results = statement.executeQuery();
+      //ResultSet results = statement.executeQuery(query);
 
       while (results.next()) {
         Book book = new Book(results.getString("name"), results.getString("author"), (results.getInt("read") == 1));
