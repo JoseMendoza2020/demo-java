@@ -2,10 +2,9 @@ package com.github.hackathon.advancedsecurityjava.Controllers;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,41 +28,47 @@ public class IndexController {
       @RequestParam(name = "read", required = false) Boolean bookread) {
     List<Book> books = new ArrayList<Book>();
 
-    Statement statement = null;
+    PreparedStatement statement = null;
+    List<String> parameters = new ArrayList<>();
 
     try {
       // Init connection to DB
       connection = DriverManager.getConnection(Application.connectionString);
-List<String> parameters = new ArrayList<>();
-      statement = connection.createStatement();
+
       String query = null;
 
       if (bookname != null) {
         // Filter by book name
         query = "SELECT * FROM Books WHERE name LIKE ?";
-	      parameters.add("%" + bookname + "%");
+        parameters.add("%" + bookname + "%");
       } else if (bookauthor != null) {
         // Filter by book author
         query = "SELECT * FROM Books WHERE author LIKE ?";
-	        parameters.add("%" + bookauthor + "%");
+        parameters.add("%" + bookauthor + "%");
       } else if (bookread != null) {
         // Filter by if the book has been read or not
         Integer read = bookread ? 1 : 0;
-        
         query = "SELECT * FROM Books WHERE read = ?";
-		parameters.add(read.toString());
+        parameters.add(read.toString());
       } else {
         // All books
         query = "SELECT * FROM Books";
       }
 
       statement = connection.prepareStatement(query);
-	  int index = 1;
-	  for(String parameter : parameters){
-		statement.setString(index,parameter);
-		index += 1;		
-	  }
-		ResultSet results = statement.executeQuery();
+      int index = 1;
+      for (String parameter : parameters) {
+        statement.setString(index, parameter);
+        index += 1;
+      }
+
+      ResultSet results = statement.executeQuery();
+
+      while (results.next()) {
+        Book book = new Book(results.getString("name"), results.getString("author"), (results.getInt("read") == 1));
+
+        books.add(book);
+      }
 
     } catch (SQLException error) {
       error.printStackTrace();
