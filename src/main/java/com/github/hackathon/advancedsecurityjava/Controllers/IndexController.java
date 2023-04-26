@@ -28,7 +28,7 @@ public class IndexController {
       @RequestParam(name = "read", required = false) Boolean bookread) {
     List<Book> books = new ArrayList<Book>();
 
-    Statement statement = null;
+   // Statement statement = null;
 
     try {
       // Init connection to DB
